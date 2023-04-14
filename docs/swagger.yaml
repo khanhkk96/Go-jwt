@@ -1,0 +1,188 @@
+basePath: /api
+definitions:
+  request.CreateUserRequest:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 2
+        type: string
+      password:
+        maxLength: 50
+        minLength: 3
+        type: string
+      username:
+        maxLength: 100
+        minLength: 2
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  request.LoginRequest:
+    properties:
+      password:
+        maxLength: 50
+        minLength: 3
+        type: string
+      username:
+        maxLength: 100
+        minLength: 2
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  request.UpdateUserRequest:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 2
+        type: string
+      id:
+        type: integer
+      password:
+        maxLength: 50
+        minLength: 3
+        type: string
+      username:
+        maxLength: 100
+        minLength: 2
+        type: string
+    required:
+    - email
+    - id
+    - password
+    - username
+    type: object
+  response.WebResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: A Tag service API in Go using Gin framework
+  title: Tag Service API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      parameters:
+      - description: Account info
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.WebResponse'
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.WebResponse'
+      tags:
+      - Auth
+  /user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.WebResponse'
+      security:
+      - BearerAuth: []
+      tags:
+      - User
+    put:
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.WebResponse'
+      security:
+      - BearerAuth: []
+      tags:
+      - User
+  /user/{userId}:
+    delete:
+      description: Remove an account
+      parameters:
+      - description: Remove user by id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.WebResponse'
+      security:
+      - BearerAuth: []
+      tags:
+      - User
+  /user/delete/{userId}:
+    delete:
+      description: Delete an account
+      parameters:
+      - description: Delete user by id
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.WebResponse'
+      security:
+      - BearerAuth: []
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
